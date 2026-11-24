@@ -1,0 +1,186 @@
+[
+    {
+        "chunk_id": 0,
+        "file_name": "reference_project.docx",
+        "file_type": ".docx",
+        "chunk_text": "AGENTIC AI INVESTMENT BANKING\nINTELLIGENCE PLATFORM\nComplete Project Documentation | Architecture, Agents, RAG, APIs, Setup & Testing\nProject type: Document-grounded financial intelligence application\nPrimary use case: Upload financial documents, ask natural-language questions, and receive evidence-based answers with source references.\nImplementation approach: Python, FastAPI, LangGraph, retrieval-augmented generation (RAG), Streamlit, and optional Amazon Bedrock Nova Pro.\n1. Executive Summary\nThe Agentic AI Investment Banking Intelligence Platform is designed to help analysts query and review financial documents such as loan agreements, annual reports, financial statements, and banking policies. A user uploads a document and asks a question.",
+        "character_count": 752,
+        "word_count": 94
+    },
+    {
+        "chunk_id": 1,
+        "file_name": "reference_project.docx",
+        "file_type": ".docx",
+        "chunk_text": "reports, financial statements, and banking policies. A user uploads a document and asks a question. The application extracts text, indexes it for retrieval, identifies relevant passages, routes the task to suitable agents, and returns an answer supported by source evidence. The system should clearly state when the uploaded material does not contain enough evidence to answer a question.\n2. Business Objectives\nReduce the time required to locate information in long financial documents.\nAnswer questions using the uploaded document rather than unsupported general knowledge.\nSummarize loan terms, financial performance, covenants, obligations, and potential risks.\nProvide source snippets and page/section metadata so a reviewer can validate the answer.",
+        "character_count": 754,
+        "word_count": 106
+    },
+    {
+        "chunk_id": 2,
+        "file_name": "reference_project.docx",
+        "file_type": ".docx",
+        "chunk_text": "ial risks.\nProvide source snippets and page/section metadata so a reviewer can validate the answer.\nCreate a modular foundation that can later integrate with approved banking systems and enterprise data sources.\n3. Scope and Initial Capabilities\nInitial version:\nUpload PDF and TXT documents through a web interface or API.\nExtract document text and split it into searchable chunks.\nRetrieve relevant passages for a user question.\nRun a coordinated multi-agent workflow.\nReturn an answer, evidence snippets, and source metadata where available.\nOffer a demo mode that does not require AWS credentials.\nOffer optional Amazon Bedrock integration when AWS credentials, region, and model access are configured.",
+        "character_count": 706,
+        "word_count": 104
+    },
+    {
+        "chunk_id": 3,
+        "file_name": "reference_project.docx",
+        "file_type": ".docx",
+        "chunk_text": "optional Amazon Bedrock integration when AWS credentials, region, and model access are configured.\nNot guaranteed in the initial version: production-grade financial advice, autonomous credit approval, real-time market data, full OCR for scanned documents, or integration with private banking systems. These require separate implementation and validation.\n4. Example User Journey\nUpload: The analyst uploads loan_agreement.pdf.\nProcess: The backend extracts text, records metadata, and divides the text into chunks.\nIndex: The chunks are stored in a retrieval index with document and page metadata.\nAsk: The analyst asks: “What is the interest rate and repayment period?”\nRetrieve: The research/retrieval stage selects the most relevant passages.",
+        "character_count": 745,
+        "word_count": 102
+    },
+    {
+        "chunk_id": 4,
+        "file_name": "reference_project.docx",
+        "file_type": ".docx",
+        "chunk_text": "e and repayment period?”\nRetrieve: The research/retrieval stage selects the most relevant passages.\nAnalyze: The financial analysis stage structures key terms; the risk stage checks for relevant risks if requested.\nVerify: The verification stage checks whether the proposed answer is supported by retrieved evidence.\nRespond: The user sees the answer, supporting excerpt(s), and available page/section references.\n5. High-Level Architecture\nUser interface: Streamlit upload and chat experience.\nAPI layer: FastAPI endpoints for health checks, document upload, and question answering.\nDocument processing: PDF/TXT extraction; OCR can be added for scanned PDFs.\nRetrieval layer: chunking, indexing, and relevant-context retrieval.",
+        "character_count": 728,
+        "word_count": 96
+    },
+    {
+        "chunk_id": 5,
+        "file_name": "reference_project.docx",
+        "file_type": ".docx",
+        "chunk_text": "can be added for scanned PDFs.\nRetrieval layer: chunking, indexing, and relevant-context retrieval. The starter implementation may use TF-IDF; semantic embeddings + FAISS are a recommended upgrade.\nAgent orchestration: LangGraph coordinates the workflow and passes structured state between agent nodes.\nLLM layer: demo/stub responses or optional Amazon Bedrock Nova Pro integration.\nObservability: structured logs, error handling, request IDs, and later CloudWatch integration.\nDeployment: local development first; Docker and AWS deployment after configuration and tests.\n6. Agent Responsibilities\nResearch / Retrieval Agent — Finds relevant passages from the uploaded document, preserves source metadata, and returns evidence for the question.",
+        "character_count": 744,
+        "word_count": 98
+    },
+    {
+        "chunk_id": 6,
+        "file_name": "reference_project.docx",
+        "file_type": ".docx",
+        "chunk_text": "sages from the uploaded document, preserves source metadata, and returns evidence for the question.\nFinancial Analytics Agent — Extracts and organizes financial values, terms, ratios, dates, and repayment conditions. Numerical calculations should use deterministic Python functions where possible, not free-form LLM arithmetic alone.\nRisk Analysis Agent — Identifies document-supported risk indicators such as covenant breaches, unusual conditions, missing information, concentration risks, or repayment concerns. It should distinguish stated facts from interpretation.\nVerification / Response Agent — Checks that the answer is supported by retrieved evidence, flags contradictions or missing evidence, and produces a concise answer with citations/snippets.\n7. Recommended LangGraph Workflow",
+        "character_count": 791,
+        "word_count": 101
+    },
+    {
+        "chunk_id": 7,
+        "file_name": "reference_project.docx",
+        "file_type": ".docx",
+        "chunk_text": "evidence, and produces a concise answer with citations/snippets.\n7. Recommended LangGraph Workflow\nA typical graph is: START → question classification → retrieval → route to the required analysis node(s) → verification → response formatting → END. Simple document questions may only need retrieval and verification. Questions about financial ratios may invoke the financial analytics node. Questions about potential risks may invoke the risk node. The graph should not call every agent for every question when it is unnecessary.\nSuggested shared state fields:\nquestion: the user’s question\ndocument_id: identifier for the selected uploaded document\nretrieved_chunks: text chunks plus source/page metadata\nanalysis: structured findings from specialist nodes\nanswer: final user-facing response",
+        "character_count": 791,
+        "word_count": 109
+    },
+    {
+        "chunk_id": 8,
+        "file_name": "reference_project.docx",
+        "file_type": ".docx",
+        "chunk_text": "age metadata\nanalysis: structured findings from specialist nodes\nanswer: final user-facing response\ncitations: source snippets and page/section references\nwarnings: missing evidence, conflicting values, or processing limitations\n8. Retrieval-Augmented Generation (RAG)\nRecommended processing pipeline:\nValidate file type and size; assign a document ID.\nExtract text and retain page numbers or section metadata where possible.\nNormalize whitespace and remove extraction artifacts without deleting meaningful financial symbols or table values.\nSplit text into chunks using document-aware boundaries. A starting experiment might use roughly 500–1,000 characters with 50–150 characters of overlap; tune this using real documents.",
+        "character_count": 725,
+        "word_count": 92
+    },
+    {
+        "chunk_id": 9,
+        "file_name": "reference_project.docx",
+        "file_type": ".docx",
+        "chunk_text": "use roughly 500–1,000 characters with 50–150 characters of overlap; tune this using real documents.\nCreate embeddings using a selected embedding model and index chunks in FAISS or an approved vector database.\nRetrieve top-k relevant chunks for each question; evaluate relevance with a test set.\nPass only the relevant evidence into the LLM prompt.\nRequire the model to state when evidence is insufficient and return source references.\nImplementation note: the earlier starter package was described as using TF-IDF retrieval. TF-IDF is useful for a baseline but is not the same as semantic embedding retrieval. Before claiming semantic RAG is implemented, verify that the code creates embeddings and uses a vector index such as FAISS.\n9. Example Input and Output\nExample question",
+        "character_count": 778,
+        "word_count": 120
+    },
+    {
+        "chunk_id": 10,
+        "file_name": "reference_project.docx",
+        "file_type": ".docx",
+        "chunk_text": "ates embeddings and uses a vector index such as FAISS.\n9. Example Input and Output\nExample question\n“What is the total loan amount, interest rate, and repayment period?”\nExpected response format\nLoan amount: [value found in the uploaded document]\nInterest rate: [value found in the uploaded document]\nRepayment period: [value found in the uploaded document]\nEvidence: [short excerpt from the document]\nSource: [filename and page/section, if available]\nConfidence/limitations: [note any ambiguity, conflicting clauses, or missing details]\nThis is a response template, not a claim about any specific loan agreement. Values must come from the uploaded source.\n10. Suggested Project Structure\nagentic_investment_banking/\n├── app/\n│   ├── api/\n│   │   └── main.py\n│   ├── agents/",
+        "character_count": 774,
+        "word_count": 113
+    },
+    {
+        "chunk_id": 11,
+        "file_name": "reference_project.docx",
+        "file_type": ".docx",
+        "chunk_text": "ect Structure\nagentic_investment_banking/\n├── app/\n│   ├── api/\n│   │   └── main.py\n│   ├── agents/\n│   │   ├── research_agent.py\n│   │   ├── financial_analytics_agent.py\n│   │   ├── risk_analysis_agent.py\n│   │   └── verification_agent.py\n│   ├── services/\n│   │   ├── document_loader.py\n│   │   ├── text_splitter.py\n│   │   ├── retrieval_service.py\n│   │   └── llm_service.py\n│   ├── graph/\n│   │   └── workflow.py\n│   └── schemas/\n│       └── request_response.py\n├── data/\n│   └── sample_financial_report.txt\n├── tests/\n├── streamlit_app.py\n├── requirements.txt\n├── .env.example\n├── Dockerfile\n├── README.md\n└── .gitignore\n11. API Design\n12. Technology Stack\n13. Local Setup (Windows / VS Code)\nOpen the extracted project folder in VS Code. Use PowerShell in the project root.",
+        "character_count": 779,
+        "word_count": 109
+    },
+    {
+        "chunk_id": 12,
+        "file_name": "reference_project.docx",
+        "file_type": ".docx",
+        "chunk_text": "indows / VS Code)\nOpen the extracted project folder in VS Code. Use PowerShell in the project root.\npy -3.12 -m venv .venv\n.\\.venv\\Scripts\\Activate.ps1\npython -m pip install --upgrade pip\npip install -r requirements.txt\nCopy-Item .env.example .env\nuvicorn app.api.main:app --reload --port 8000\nOpen http://localhost:8000/health and http://localhost:8000/docs. In a second terminal, activate the same environment and run:\nstreamlit run streamlit_app.py\nThen open http://localhost:8501. If Python 3.12 is not installed, install a compatible Python version or adjust the command to the version supported by the project dependencies.\n14. Amazon Bedrock Configuration\nChoose the AWS region where the intended Bedrock model is available.",
+        "character_count": 731,
+        "word_count": 100
+    },
+    {
+        "chunk_id": 13,
+        "file_name": "reference_project.docx",
+        "file_type": ".docx",
+        "chunk_text": ". Amazon Bedrock Configuration\nChoose the AWS region where the intended Bedrock model is available.\nConfigure AWS credentials using an approved method such as an AWS CLI profile or IAM role. Never paste access keys into source code or commit them to Git.\nConfirm the account has permission to invoke the chosen model and that model access is enabled as required.\nSet the region and model identifier in the local .env file according to .env.example and the code’s configuration names.\nTest the Bedrock call separately before enabling it in the full workflow.\nKeep demo mode available so document processing and API tests can run without cloud credentials.\nNever use an AWS account password as an access key or secret key. Do not share credentials in chat, logs, screenshots, or repositories.\n15.",
+        "character_count": 794,
+        "word_count": 131
+    },
+    {
+        "chunk_id": 14,
+        "file_name": "reference_project.docx",
+        "file_type": ".docx",
+        "chunk_text": "access key or secret key. Do not share credentials in chat, logs, screenshots, or repositories.\n15. Security and Responsible Use\nUse synthetic or approved sample documents during development.\nDo not upload confidential customer data to unapproved environments.\nValidate file extension, MIME type, size, and parsing errors.\nApply access controls before supporting multiple users or tenants.\nTreat document content as untrusted input; guard against prompt injection embedded in files.\nKeep secrets in environment variables or a managed secret store; exclude .env from Git.\nLog operational metadata without unnecessarily logging sensitive document text.\nRequire human review for credit decisions, risk ratings, compliance decisions, and any consequential financial action.",
+        "character_count": 769,
+        "word_count": 106
+    },
+    {
+        "chunk_id": 15,
+        "file_name": "reference_project.docx",
+        "file_type": ".docx",
+        "chunk_text": "w for credit decisions, risk ratings, compliance decisions, and any consequential financial action.\nDo not present model-generated analysis as professional financial, legal, or investment advice.\n16. Evaluation and Testing Plan\n17. Development Roadmap\nPhase 1 — Local baseline: Run the API and UI, upload a sample document, ask questions, and return source evidence.\nPhase 2 — Semantic RAG: Add embedding generation, FAISS indexing, chunk metadata, and retrieval evaluation.\nPhase 3 — Agent workflow: Implement specialist nodes, LangGraph routing, structured outputs, and evidence verification.\nPhase 4 — Financial analytics: Add deterministic calculations, ratio extraction, covenant checks, and risk summaries with explicit assumptions.",
+        "character_count": 738,
+        "word_count": 101
+    },
+    {
+        "chunk_id": 16,
+        "file_name": "reference_project.docx",
+        "file_type": ".docx",
+        "chunk_text": "stic calculations, ratio extraction, covenant checks, and risk summaries with explicit assumptions.\nPhase 5 — Bedrock integration: Configure Nova Pro securely and test response quality, latency, errors, and cost.\nPhase 6 — Production hardening: Add authentication, access controls, OCR, audit trails, automated tests, container deployment, and monitoring.\n18. Interview Explanation\n“I designed an Agentic AI Investment Banking Intelligence Platform that answers questions from financial documents. The system extracts and chunks documents, indexes them for retrieval, and uses a RAG pipeline to provide relevant context. LangGraph coordinates research, financial analytics, risk analysis, and answer verification stages.",
+        "character_count": 720,
+        "word_count": 95
+    },
+    {
+        "chunk_id": 17,
+        "file_name": "reference_project.docx",
+        "file_type": ".docx",
+        "chunk_text": "LangGraph coordinates research, financial analytics, risk analysis, and answer verification stages. The LLM generates an answer grounded in retrieved passages, and the application returns source evidence so users can validate it. The backend uses FastAPI, the user interface uses Streamlit, and Amazon Bedrock can provide the LLM capability when configured. I evaluate retrieval and answer quality and keep human review in place for consequential financial decisions.”\n19. Known Limitations and Accuracy Notes\nThis document describes the intended architecture and setup; it is not proof that every roadmap capability is already implemented in the starter ZIP.",
+        "character_count": 659,
+        "word_count": 95
+    },
+    {
+        "chunk_id": 18,
+        "file_name": "reference_project.docx",
+        "file_type": ".docx",
+        "chunk_text": "and setup; it is not proof that every roadmap capability is already implemented in the starter ZIP.\nCheck the actual source code before claiming semantic embeddings, FAISS, OCR, complete agent routing, or production security are implemented.\nThe initial starter package was described as using TF-IDF retrieval and demo mode. Treat semantic RAG and full AWS integration as enhancements unless verified in code.\nFinancial figures must be supported by source text or explicit calculations. If evidence is missing or contradictory, the application should say so.\nA successful local demo is not equivalent to a production deployment or validated banking system.\n20. Final Deliverable Checklist\n☐ Project source code and dependency file\n☐ Sample financial document\n☐ Environment template without secrets",
+        "character_count": 797,
+        "word_count": 119
+    },
+    {
+        "chunk_id": 19,
+        "file_name": "reference_project.docx",
+        "file_type": ".docx",
+        "chunk_text": "source code and dependency file\n☐ Sample financial document\n☐ Environment template without secrets\n☐ FastAPI endpoints and interactive API docs\n☐ Streamlit interface\n☐ Agent workflow and document retrieval\n☐ Setup and troubleshooting guide\n☐ Unit/integration tests\n☐ AWS configuration instructions\n☐ Security, evaluation, and deployment roadmap\nMethod | Endpoint | Purpose\nGET | / | Basic service information.\nGET | /health | Health/readiness check.\nPOST | /documents/upload | Upload and process a supported document; return document ID and processing status.\nPOST | /ask | Submit a question with a document ID; return answer and evidence.\nGET | /docs | Interactive FastAPI API documentation in local development.\nLayer | Technology",
+        "character_count": 732,
+        "word_count": 111
+    },
+    {
+        "chunk_id": 20,
+        "file_name": "reference_project.docx",
+        "file_type": ".docx",
+        "chunk_text": "dence.\nGET | /docs | Interactive FastAPI API documentation in local development.\nLayer | Technology\nLanguage | Python 3.11 or 3.12 recommended for compatibility checks\nAPI | FastAPI + Uvicorn\nAgent orchestration | LangGraph\nLLM | Amazon Bedrock Nova Pro, optional; demo mode for local tests\nDocument extraction | PyMuPDF or another PDF text extractor; OCR for scanned files is a separate capability\nRetrieval | Baseline TF-IDF; recommended semantic embeddings + FAISS\nUI | Streamlit\nPackaging | Docker\nTesting | pytest; retrieval quality and answer-grounding tests\nMonitoring | Python logging initially; CloudWatch when deployed to AWS\nTest area | Acceptance criteria\nDocument ingestion | Valid PDF/TXT uploads are accepted; unsupported or oversized files are rejected safely.",
+        "character_count": 776,
+        "word_count": 116
+    },
+    {
+        "chunk_id": 21,
+        "file_name": "reference_project.docx",
+        "file_type": ".docx",
+        "chunk_text": "ingestion | Valid PDF/TXT uploads are accepted; unsupported or oversized files are rejected safely.\nRetrieval | Relevant chunks are returned for known questions; test Precision@K, Recall@K, and Hit Rate.\nGrounded answers | Every factual answer can be traced to retrieved evidence; unsupported questions trigger an uncertainty response.\nNumerical correctness | Validate calculations with deterministic test cases and known expected values.\nAgent routing | General lookup, calculation, and risk questions route to appropriate workflow nodes.\nRobustness | Test empty files, corrupted PDFs, no-match questions, contradictory passages, and malformed requests.\nSecurity | Test prompt-injection text in documents, secret leakage, and access-control boundaries.",
+        "character_count": 753,
+        "word_count": 100
+    },
+    {
+        "chunk_id": 22,
+        "file_name": "reference_project.docx",
+        "file_type": ".docx",
+        "chunk_text": "Security | Test prompt-injection text in documents, secret leakage, and access-control boundaries.\nOperational readiness | Health endpoint, logs, startup instructions, and dependency installation work.",
+        "character_count": 201,
+        "word_count": 24
+    }
+]

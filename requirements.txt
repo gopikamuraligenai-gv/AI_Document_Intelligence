@@ -1,0 +1,34 @@
+
+# Backend
+fastapi
+uvicorn
+python-multipart
+
+# Frontend
+streamlit
+
+# Document Processing
+pymupdf
+python-docx
+
+# Grammar Checking
+language-tool-python
+
+# Local LLM
+ollama
+
+# Embeddings and Vector Database
+sentence-transformers
+faiss-cpu
+
+# Data Processing
+numpy
+pandas
+
+# Database
+sqlalchemy
+
+# Validation and HTTP
+pydantic
+requests
+
